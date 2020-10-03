@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>NerdTube</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <style>
+
+
+
+html,body        {height:100%; margin-top:0; margin-bottom:0;background-color: #282828;font-family: 'Roboto Slab', serif; overflow-x: hidden;}
+.h_iframe iframe {width:90%; height:700px;}
+.h_iframe {
+    height: 100%;
+}
+
+
+
+
+h1{
+  color:white;
+}
+p{
+  color:black;
+}
+
+mainlist{
+
+
+  display:flex;
+  text-align:center;
+  justify-content:center;
+  flex-direction:row;
+  flex-wrap:wrap;
+}
+mainvidlist{
+
+
+  display:flex;
+  text-align:center;
+  justify-content:center;
+  flex-direction:row;
+  flex-wrap:wrap;
+}
+articlelist {
+	display: flex;
+  flex-wrap:wrap;
+  flex-direction: column;
+  background-color:white;
+	align-items: center;
+  margin-top: 50%;
+	padding: 8px 12px;
+	border: 2px solid black;
+	border-radius: 8px;
+	margin: 10px;
+  transition:1s;
+
+  max-width:500px
+
+}
+articlelist:hover {
+  transform:scale(1.1);
+
+}
+mainswipe{
+  background-color: #d3d3d3;
+
+}
+
+
+main {
+  color:#282828;
+  margin-left: auto ;
+
+
+}
+
+article {
+	display: flex;
+  flex-wrap:wrap;
+  background-color:white;
+  flex-direction: column;
+
+
+	border: 2px solid black;
+	border-radius: 8px;
+
+  transition:1s;
+  max-width:500px ;
+  opacity:0.8;
+  text-align: center;
+
+}
+article:hover {
+  transform:scale(1.05);
+  opacity:1;
+}
+
+.thumb {
+  margin: auto;
+	height: 70px;
+  width:70px;
+	border-radius: 4px solid black;
+  border-radius: 50%;
+}
+
+.details {
+	padding: 8px 22px;
+  margin: auto;
+}
+
+.swiper-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 300px;
+
+  background-color: #d3d3d3;
+}
+.btn{
+  margin:0px auto;
+}
+
+
+@media only screen and (max-width: 600px){
+  mainlist{
+    flex-direction:column;
+  }
+}
+
+      </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand mx-auto" style="color:red; letter-spacing:4px; font-size:50px" href="#">
+
+    NERDTUBE</a>
+
+</nav>
+<div class="row justify-content-center my-5">
+  <div class="col-lg-5 col-12 d-flex justify-content-around justify-content-lg-end ">
+<form class="form-inline my-2 my-lg-0  " id="yt-form">
+  <input class="form-control mr-sm-2" type="text" oninvalid="this.setCustomValidity('YOU HAVE TO SEARCH SOMETHING!')"
+    oninput="this.setCustomValidity('')" placeholder="SEARCH FOR ANYTHING..." id="keyword-input" required>
+  <!--<input class="form-control mr-sm-2" type="number" placeholder="Select Count" id="maxresult-input">-->
+  <select id="order-input" class="form-control mr-sm-2">
+      
+      <option value="date">Date</option>
+      <option value="rating">Rating</option>
+      <option value="relevance" selected>Relevance</option>
+      <option value="title">Title</option>
+      <option value="viewCount" >View Count</option>
+  </select>
+
+
+  <button class="btn btn-outline-danger my-2 my-sm-0 " type="submit" id="submitButton"  >Search</button>
+
+
+</form>
+</div>
+
+
+<div class="col-lg-2 col-12 d-flex justify-content-center">
+<p class="mx-auto" style="color:white"> or</p>
+</div>
+
+<div class="col-lg-5 col-12 d-flex  justify-content-around justify-content-lg-start">
+<form class="form-inline my-2 my-lg-0" id="link_form">
+  <input class="form-control mr-sm-2" type="text" placeholder="PASTE VIDEO LINK..." id="link_input" required>
+  <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" id="submitButton2" >Search</button>
+</form>
+</div>
+</div>
+<div class="vids" style="display:none; text-align:center" id="vids">
+  <h1>VIDEOS : </h1>
+</div>
+
+<mainswipe id="mainswipe">
+
+</mainswipe>
+
+
+
+<div class="pls" style="display:none; text-align:center" id="pls">
+  <h1>PLAYLISTS : </h1>
+</div>
+<mainlist id="ml">
+  </mainlist>
+
+  <plswipe id="plswipe">
+  </plswipe>
+
+
+
+<mainvidlist id="mv">
+</mainvidlist>
+
+
+
+
+
+
+<div class="row" style="text-align:center">
+  <div class="col-lg-8 col-12 my-5">
+    <div class="playlistname" id="plname"  style="display:none">
+      </div>
+
+    <div class="h_iframe mt-5" id="video" >
+      </div>
+
+  </div>
+  <div class="col-lg-4 col-12 my-5 ">
+    <div class="dec" id="dec" style="display:none;">
+    <h1>NEXT EPISODES</h1>
+    </div>
+    <div class="container overflow-auto mt-5" id="whiteborder" style="max-height:700px; border: 2px solid white; display:none">
+
+
+	   <main id="main">
+      </main>
+
+      </div>
+    </div>
+</div>
+
+
+
+<footer class="py-lg-5 py-3" style="text-align:center">
+        		<div class="container-fluid px-lg-5 px-3">
+        			<div class="row footer-top-w3layouts">
+        				<div class="col-lg-4 footer-grid-w3ls">
+        					<div class="footer-title">
+        						<h3>Welcome to NERDTUBE.com</h3>
+        					</div>
+        					<div class="footer-text">
+                    <p>Welcome to the first website in the internet that doesn't want you to stay within it. No ads, no recommendations, no clickbaits.
+                      <p> <span> <a href="#">You are in control of what you search </a></span> </p>
+
+        						<p>Know More About Us</p>
+        						<ul class="footer-social mt-lg-4 mt-3" style="margin-left:-50px">
+
+        							<li class="mx-2">
+        								<a href="https://www.facebook.com/emblembangladesh">
+        									<span class="fa fa-facebook-f"></span>
+        								</a>
+        							</li>
+        							<li class="mx-2">
+        								<a href="https://www.instagram.com/emblembangladesh">
+        									<span class="fa">&#xf16d;</span>
+        								</a>
+        							</li>
+                      <li class="mx-2">
+                        <a href="mailto:yaadmainul@gmail.com">
+                          <span><i class="fa fa-envelope"></i></span>
+                        </a>
+                      </li>
+
+
+        						</ul>
+        					</div>
+        				</div>
+
+
+        				<div class="col-lg-4 footer-grid-w3ls">
+        					<div class="footer-title">
+        						<h3>HOW IT WORKS</h3>
+        					</div>
+                  <div class="footer-text">
+                  <p> After you search for anything, we will only let you watch videos/ playlists that are educational/ techy. We don't want you to get lost in
+                    the<span> <h4 style="color:red"> RECOMMENDATION JUNGLE</h4></span> <p> or </p>
+                    <p> feel clueless thinking why in the world you ended up watching that</p>
+                    <h4 style="color:red">TikTok of a dog moving to the tune of RickRoll</h4>
+                    <p>(actually that sounds great though....)</p>
+                  </div>
+
+        				</div>
+        				<div class="col-lg-4 footer-grid-w3ls" >
+        					<div class="footer-title">
+        						<h3>PLATFORMS</h3>
+        					</div>
+        					<ul class="links" style="margin-left:-50px">
+                    <li>
+        							<a href="shop.php" style="text-decoration:none">WEB</a></li>
+        						<li>
+        							<a href="index.php" style="text-decoration:none">iOS</a>
+        						</li>
+        						<li>
+        							<a href="about.html" style="text-decoration:none">ANDROID</a>
+        						</li>
+
+
+
+        					</ul>
+        				</div>
+
+
+
+
+
+        			</div>
+        			<div class="copyright-w3layouts mt-4">
+        				<p class="copy-right text-center ">&copy; 2020 emblembangladesh.com. Private Property | Designed by
+        					<a href="https://www.facebook.com/emblembangladesh"> Emblem Bangladesh.</a>
+        				</p>
+        			</div>
+        		</div>
+        	</footer>
+
+
+          <script>
+
+        $(function() {
+            $("#keyword-input").focus();
+        });
+
+          </script>
+
+          <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+          <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+
+
+
+
+
+<script src="https://apis.google.com/js/api.js"></script>
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.js"></script>
+    <!--<script src="finalscript.js"></script>-->
+	<script type = "text/javascript">
+
+	gapi.load("client", loadClient);
+  var dict={};
+  var vidDict={};
+
+
+
+	function loadClient() {
+		gapi.client.setApiKey("AIzaSyB2-9lCO1BXePMqXqv0A4JT592XVA_z6Uk");
+		return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+			.then(function() { console.log("GAPI client loaded for API");
+					execute();
+					},
+					function(err) { console.error("Error loading GAPI client for API", err); });
+	}
+
+const ytForm = document.getElementById('yt-form');
+const keywordInput = document.getElementById('keyword-input');
+//const maxresultInput = document.getElementById('maxresult-input');
+const orderInput = document.getElementById('order-input');
+const videoList = document.getElementById('videoListContainer');
+var pageToken = '';
+
+ytForm.addEventListener('submit', e => {
+    document.getElementById('ml').innerHTML="";
+    document.getElementById('plname').style.display="none";
+    document.getElementById('mv').innerHTML="";
+    e.preventDefault();
+    execute();
+});
+
+
+const linktext = document.getElementById('link_form');
+const linkin = document.getElementById('link_input');
+linktext.addEventListener('submit', e => {
+    document.getElementById('ml').innerHTML="";
+    document.getElementById('plname').style.display="none";
+    document.getElementById('mv').innerHTML="";
+    e.preventDefault();
+    linkexecute();
+});
+function linkexecute(){
+  var linkstr = linkin.value;
+  console.log(linkstr);
+  var res = linkstr.split("=");
+  console.log(res);
+  console.log("lenght =", res.length);
+  var len = res.length;
+  if(len==1){
+    res = res[0].split(".");
+    console.log(res);
+    res = res[1].split("/");
+    console.log(res);
+    console.log("this link",res[1]);
+    showVidfromLink(res[1],0)
+
+  }
+  if(len>=2){
+    showVidfromLink(res[1],1);
+  }
+
+}
+function showVidfromLink(id, linkstate){
+  if(linkstate==1){
+  console.log("full id =", id);
+  var idlen=id.length;
+  var lastindex=idlen-1;
+  var andpos = lastindex-1;
+  if(id.charAt(andpos)=='&'){
+    id=id.split("&");
+    id=id[0];
+    console.log(id);
+  }
+}
+  document.getElementById('whiteborder').style.display="none";
+  document.getElementById('dec').style.display="none";
+
+  var key = 'AIzaSyDl1fZJ9Q6_oa1xzTMZ0ROMgrpq0LC1xYU';
+
+  var URL='https://www.googleapis.com/youtube/v3/videos';
+  var options = {
+    part:'snippet',
+    id:id,
+    key:key,
+
+  }
+
+
+
+  loadVids();
+  function loadVids(){
+    $.getJSON(URL, options, function (data) {
+        //var id = data.items[0].snippet.resourceId.videoId;
+        console.log(data);
+        var cat = data.items[0].snippet.categoryId;
+        var tit=data.items[0].snippet.title;
+        console.log("VID CAT",cat);
+        if(cat==27 || cat==28){
+        $('#plname').html(
+          `<h1>Video : ${tit}</h1>`
+        )
+        document.getElementById('plname').style.display="block";
+        $('#video').html(`
+          <iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        `);
+      }
+      else{
+        $('#video').html(``);
+        document.getElementById('plname').style.display="block";
+        $('#plname').html(
+          `<h1>VIDEO IS NOT EDUCATIONAL</h1>`
+        )
+      }
+      $('html, body').animate({
+          scrollTop: $("#plname").offset().top
+      }, 1000);
+        //resultsLoop(data);
+        //mainVid(id);
+
+    });
+
+
+
+  }
+
+
+}
+
+
+
+
+
+function paginate(e, obj) {
+    e.preventDefault();
+    pageToken = obj.getAttribute('data-id');
+    execute();
+}
+function truncate(str, no_words) {
+    return str.split(" ").splice(0,no_words).join(" ");
+}
+
+// Make sure the client is loaded before calling this method.
+	function execute() {
+    const searchString = keywordInput.value;
+    //const maxresult = maxresultInput.value;
+    const orderby = orderInput.value;
+    if(searchString==''){
+      return;
+    }
+
+    var arr_search = {
+        "part": 'snippet',
+        "type": 'any',
+        "order": orderby,
+        "maxResults": 50,
+        "q": searchString
+    };
+
+    if (pageToken != '') {
+        arr_search.pageToken = pageToken;
+    }
+
+
+
+		return gapi.client.youtube.search.list(arr_search)
+			.then(function(response) {
+			console.log(response);
+        // Handle the results here (response.result has the parsed body).
+			const listItems = response.result.items;
+      const plItems=[];
+      const vidItems=[];
+			if (listItems) {
+				let output = '<h4 class="tittle-w3layouts text-center my-lg-4 my-4">PLAYLIST</h4><ul>';
+
+        listItems.forEach((item) => {
+          console.log(item.id.kind);
+          if(item.id.kind.localeCompare("youtube#playlist")==0){
+            plItems.push(item);
+          }
+          else if(item.id.kind.localeCompare("youtube#video")==0){
+            vidItems.push(item);
+          }
+        });
+
+
+
+        //console.log(len(plItems));
+        console.log(plItems);
+        if(plItems.length>0){
+          document.getElementById('plswipe').innerHTML="";
+          document.getElementById('pls').style.display="block";
+        }
+        console.log(plItems.length);
+        document.getElementById('plswipe').innerHTML=`
+        <div class="swiper-container plslider">
+        <div class="swiper-wrapper">
+
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>`;
+
+      var swiperpl = new Swiper('.plslider', {
+      pagination: '.swiper-pagination',
+      nextButton: '.swiper-button-next',
+      prevButton: '.swiper-button-prev',
+      slidesPerView: 1,
+      centeredSlides: false,
+      spaceBetween: 10,
+      navigation: {
+       nextEl: '.swiper-button-next',
+       prevEl: '.swiper-button-prev',
+     },
+      breakpoints: {
+    // when window width is >= 320px
+    320: {
+      slidesPerView: 1,
+      spaceBetween: 20
+    },
+    // when window width is >= 480px
+    480: {
+      slidesPerView: 1,
+      spaceBetween: 30
+    },
+    // when window width is >= 640px
+    640: {
+      slidesPerView: 2,
+      spaceBetween: 40
+    },
+    1024:{
+      slidesPerView: 2,
+      spaceBetween: 40
+    },
+    1040:{
+      slidesPerView:4,
+      spaceBetween:10
+    }
+  }
+
+
+    });
+
+
+
+				plItems.forEach(item => {
+					const videoId = item.id.playlistId;
+					const videoTitle = item.snippet.title;
+					const imgSrc=item.snippet.thumbnails.default.url;
+          const desc=item.snippet.channelTitle;
+          dict[videoId]=videoTitle;
+          console.log(dict[videoId]);
+
+          swiperpl.appendSlide([
+    `<div class="swiper-slide">
+    <a href="#" style="text-decoration:none">
+      <articlelist class="item" data-key="${videoId}">
+
+        <img src="${imgSrc}" alt="" class="thumb">
+        <div class="details">
+
+          <h4>${videoTitle}</h4>
+          <p>${desc}</p>
+
+        </div>
+
+      </articlelist>
+      </a></div>`
+
+
+          ]);
+
+
+				});
+
+
+
+
+
+
+        if(vidItems.length>0){
+          document.getElementById('mainswipe').innerHTML="";
+          document.getElementById('vids').style.display="block";
+        }
+
+        document.getElementById('mainswipe').innerHTML=`
+        <div class="swiper-container vidslider">
+        <div class="swiper-wrapper">
+
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>`;
+
+      var swiper = new Swiper('.vidslider', {
+      pagination: '.swiper-pagination',
+      nextButton: '.swiper-button-next',
+      prevButton: '.swiper-button-prev',
+      slidesPerView: 1,
+      centeredSlides: false,
+      spaceBetween: 10,
+      navigation: {
+       nextEl: '.swiper-button-next',
+       prevEl: '.swiper-button-prev',
+     },
+      breakpoints: {
+    // when window width is >= 320px
+    320: {
+      slidesPerView: 1,
+      spaceBetween: 20
+    },
+    // when window width is >= 480px
+    480: {
+      slidesPerView: 1,
+      spaceBetween: 30
+    },
+    // when window width is >= 640px
+    640: {
+      slidesPerView: 2,
+      spaceBetween: 40
+    },
+    1024:{
+      slidesPerView: 2,
+      spaceBetween: 40
+    },
+    1040:{
+      slidesPerView:4,
+      spaceBetween:10
+    }
+  }
+
+
+    });
+
+        vidItems.forEach((item) => {
+          const vidid = item.id.videoId;
+          const vidTit=item.snippet.title;
+          const img=item.snippet.thumbnails.default.url;
+          const desc=item.snippet.channelTitle;
+          vidDict[vidid]=vidTit;
+          swiper.appendSlide([
+    `<div class="swiper-slide"><a href=# style="text-decoration:none">
+      <articlelist class="item" data-key="${vidid}">
+
+        <img src="${img}" alt="" class="thumb">
+        <div class="details">
+
+          <h4>${vidTit}</h4>
+          <p>${desc}</p>
+
+        </div>
+
+      </articlelist>
+      </a></div>`
+
+
+          ]);
+});
+        console.log(vidItems);
+
+			}
+		},
+		function(err) { console.error("Execute error", err); });
+		}
+
+    $('mainswipe').on('click', 'articlelist', function () {
+        var id = $(this).attr('data-key');
+        document.getElementById('main').innerHTML = "";
+        console.log(vidDict[id]);
+        var tit=vidDict[id];
+
+
+
+
+        showVid(id,tit);
+    });
+
+
+
+    $('plswipe').on('click', 'articlelist', function () {
+        var id = $(this).attr('data-key');
+        document.getElementById('main').innerHTML = "";
+        console.log(dict[id]);
+        var tit=dict[id];
+
+
+
+        search(id,tit);
+    });
+
+
+
+
+
+
+
+	</script>
+  <script>
+
+
+
+  function showVid(id, tit){
+    document.getElementById('whiteborder').style.display="none";
+    document.getElementById('dec').style.display="none";
+
+    var key = 'AIzaSyDl1fZJ9Q6_oa1xzTMZ0ROMgrpq0LC1xYU';
+
+    var URL='https://www.googleapis.com/youtube/v3/videos';
+    var options = {
+      part:'snippet',
+      id:id,
+      key:key,
+      fields:'items(id,snippet(channelId,categoryId))',
+    }
+
+
+
+    loadVids();
+    function loadVids(){
+      $.getJSON(URL, options, function (data) {
+          //var id = data.items[0].snippet.resourceId.videoId;
+          console.log(data);
+          var cat = data.items[0].snippet.categoryId;
+          console.log("VID CAT",cat);
+          if(cat==27 || cat==28){
+          $('#plname').html(
+            `<h1>Video : ${tit}</h1>`
+          )
+          document.getElementById('plname').style.display="block";
+          $('#video').html(`
+            <iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          `);
+        }
+        else{
+          $('#video').html(``);
+          document.getElementById('plname').style.display="block";
+          $('#plname').html(
+            `<h1>VIDEO IS NOT EDUCATIONAL</h1>`
+          )
+        }
+        $('html, body').animate({
+            scrollTop: $("#plname").offset().top
+        }, 1000);
+          //resultsLoop(data);
+          //mainVid(id);
+
+      });
+
+
+
+    }
+
+
+  }
+
+
+
+  </script>
+
+
+<script>
+
+
+
+function search(id,tit) {
+
+  //console.log(id);
+
+    var key = 'AIzaSyCa-gCv0Pwg0SM5umSSSmyTezVa-Fa4pGI';
+     //playlistId = 'PLUl4u3cNGP6317WaSNfmCvGym2ucw3oGp';
+     var playlistId=id;
+
+    var URL = 'https://www.googleapis.com/youtube/v3/playlistItems';
+    //playlistId=document.getElementById('searchTerm').value;
+    //console.log(playlistId);
+
+
+
+    var options = {
+        part: 'snippet',
+        key: key,
+        maxResults: 60,
+        playlistId: playlistId,
+
+    }
+    //console.log(playlistId);
+
+    loadVids();
+
+    function loadVids() {
+        $.getJSON(URL, options, function (data) {
+            var id = data.items[0].snippet.resourceId.videoId;
+            var key2 = 'AIzaSyA4Pj5j77W5yBiuuS-dO50TXXrsaPXD8x4';
+
+            var URL2='https://www.googleapis.com/youtube/v3/videos';
+            var options2 = {
+              part:'snippet',
+              id:id,
+              key:key2,
+              fields:'items(id,snippet(channelId,categoryId))',
+            }
+            $.getJSON(URL2, options2, function (data2) {
+                //var id = data.items[0].snippet.resourceId.videoId;
+                console.log(data2);
+                var finalcat = data2.items[0].snippet.categoryId;
+                console.log("nested fincat+ ",finalcat);
+                //finalcat = cat;
+                //resultsLoop(data);
+                //mainVid(id);
+                console.log("main data ---", data);
+                if(finalcat==27 || finalcat==28){
+                  document.getElementById('plname').style.display="block";
+                  document.getElementById('whiteborder').style.display="block";
+
+                  $('#plname').html(
+                    `<h1>Playlist : ${tit}</h1>`
+                  )
+
+                //console.log(data);
+                resultsLoop(data);
+                mainVid(id);
+                $('html, body').animate({
+                    scrollTop: $("#video").offset().top
+                }, 1000);
+              }
+              else{
+                $('#video').html(``);
+                document.getElementById('plname').style.display="block";
+                $('#plname').html(
+                  `<h1>PLAYLIST IS NOT EDUCATIONAL</h1>`
+                )
+              }
+
+            });
+            //console.log("finalcat--",finalcat);
+            //console.log("CAT + ____",cat);
+
+
+
+
+
+        });
+    }
+
+    function mainVid(id) {
+
+
+        document.getElementById('plname').style.display="block";
+
+
+        $('#video').html(`
+					<iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+				`);
+
+    }
+
+
+    function resultsLoop(data) {
+        document.getElementById('dec').style.display="block";
+
+
+        $.each(data.items, function (i, item) {
+
+            var thumb = item.snippet.thumbnails.medium.url;
+            var title = item.snippet.title;
+            var desc = item.snippet.description.substring(0, 100);
+            var vid = item.snippet.resourceId.videoId;
+
+
+            $('main').append(`
+
+            <a href="#video" style="text-decoration:none">
+							<article class="item" data-key="${vid}">
+
+								<img src="${thumb}" alt="" class="thumb">
+								<div class="details">
+
+									<h4>${title}</h4>
+									<p>${desc}</p>
+
+								</div>
+
+							</article>
+              </a>
+						`);
+        });
+    }
+
+		// CLICK EVENT
+    $('main').on('click', 'article', function () {
+        var id = $(this).attr('data-key');
+
+        mainVid(id);
+    });
+
+
+}
+
+</script>
+
+  </body>
+</html>
